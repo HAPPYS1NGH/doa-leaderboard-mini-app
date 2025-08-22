@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
 	darkMode: ["class"],
@@ -9,7 +10,21 @@ export default {
 	],
 	theme: {
 		extend: {
+			fontFamily: {
+				sans: ["Adelle Sans", ...defaultTheme.fontFamily.sans],
+				"futura-bold": [
+				  "Futura Bold",
+				  "Futura",
+				  ...defaultTheme.fontFamily.sans,
+				],
+			  },
 			colors: {
+				"privy-navy": "#160B45",
+				"privy-light-blue": "#EFF1FD",
+				"privy-blueish": "#D4D9FC",
+				"privy-pink": "#FF8271",
+				cream: "#F6F4E0",
+				forest: "#0D2E16",
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
 				card: 'var(--card)',

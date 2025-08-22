@@ -8,12 +8,12 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWallet = false }) => (
-  <div className="fixed bottom-0 left-0 right-0 mx-4 mb-4 bg-gray-100 dark:bg-gray-800 border-[3px] border-double border-purple-500 px-2 py-2 rounded-lg z-50">
+  <div className="fixed bottom-0 left-0 right-0 mx-4 mb-4 bg-cream border-[3px] border-double border-forest px-2 py-2 rounded-lg z-50">
     <div className="flex justify-around items-center h-14">
       <button
         onClick={() => setActiveTab('home')}
         className={`flex flex-col items-center justify-center w-full h-full ${
-          activeTab === 'home' ? 'text-purple-500' : 'text-gray-500'
+          activeTab === 'home' ? 'text-forest' : 'text-forest/50'
         }`}
       >
         <span className="text-xl">🏠</span>
@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
       <button
         onClick={() => setActiveTab('actions')}
         className={`flex flex-col items-center justify-center w-full h-full ${
-          activeTab === 'actions' ? 'text-purple-500' : 'text-gray-500'
+          activeTab === 'actions' ? 'text-forest' : 'text-forest/50'
         }`}
       >
         <span className="text-xl">⚡</span>
@@ -31,7 +31,7 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
       <button
         onClick={() => setActiveTab('context')}
         className={`flex flex-col items-center justify-center w-full h-full ${
-          activeTab === 'context' ? 'text-purple-500' : 'text-gray-500'
+          activeTab === 'context' ? 'text-forest' : 'text-forest/50'
         }`}
       >
         <span className="text-xl">📋</span>
@@ -41,13 +41,14 @@ export const Footer: React.FC<FooterProps> = ({ activeTab, setActiveTab, showWal
         <button
           onClick={() => setActiveTab('wallet')}
           className={`flex flex-col items-center justify-center w-full h-full ${
-            activeTab === 'wallet' ? 'text-purple-500' : 'text-gray-500'
+            activeTab === 'wallet' ? 'text-forest' : 'text-forest/50'
           }`}
         >
           <span className="text-xl">👛</span>
           <span className="text-xs mt-1">Wallet</span>
         </button>
       )}
+
     </div>
   </div>
 );

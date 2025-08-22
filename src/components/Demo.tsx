@@ -23,7 +23,9 @@ import { BaseError, UserRejectedRequestError } from "viem";
 import { useMiniApp } from "@neynar/react";
 import { Header } from "~/components/ui/Header";
 import { Footer } from "~/components/ui/Footer";
+
 import { USE_WALLET, APP_NAME } from "~/lib/constants";
+import Link from "next/link";
 
 export type Tab = "home" | "actions" | "context" | "wallet";
 
@@ -205,8 +207,26 @@ export default function Demo(
         {activeTab === "home" && (
           <div className="flex items-center justify-center h-[calc(100vh-200px)] px-6">
             <div className="text-center w-full max-w-md mx-auto">
-              <p className="text-lg mb-2">Put your content here!</p>
-              <p className="text-sm text-gray-500">Powered by Neynar 🪐</p>
+              <h2 className="text-xl font-bold mb-4 text-forest">🏆 Tap Day Leaderboard</h2>
+              <p className="text-lg mb-4 text-forest/80">Claim your custom deptofagri.eth subname!</p>
+              <div className="bg-forest/5 border border-forest/20 rounded-lg p-4 mb-4">
+                <p className="text-sm text-forest mb-2">
+                  <strong>How it works:</strong>
+                </p>
+                <ul className="text-xs text-forest/70 space-y-1 text-left">
+                  <li>• Connect your wallet</li>
+                  <li>• Check if you&apos;re eligible from the leaderboard</li>
+                  <li>• Choose your subname</li>
+                  <li>• Get your .deptofagri.eth name!</li>
+                </ul>
+              </div>
+              <Link 
+                href="/claim"
+                className="w-full bg-forest hover:bg-forest/90 text-cream font-futura-bold py-3 px-6 rounded-xl transition-colors duration-200 shadow-lg hover:shadow-xl text-center block"
+              >
+                🏆 Claim Your Subname
+              </Link>
+              <p className="text-sm text-forest/50 mt-4">Powered by Neynar 🪐</p>
             </div>
           </div>
         )}
@@ -383,6 +403,8 @@ export default function Demo(
             )}
           </div>
         )}
+
+
 
         <Footer
           activeTab={activeTab}

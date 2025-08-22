@@ -392,28 +392,18 @@ export default function ClaimPage() {
     setFetchedUsername("");
     
     try {
-      const response = await fetch("/api/subname/create", {
+      const response = await fetch("/api/subname/fetch-username", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          label: context?.user?.username || "test",
-          address: "0x0000000000000000000000000000000000000000", // dummy address
-          farcasterData: {
-            fid: fid,
-            username: context?.user?.username || "",
-            displayName: context?.user?.displayName || "",
-            pfpUrl: context?.user?.pfpUrl || "",
-            walletAddress: address || "",
-            context: context || {}
-          }
+          fid: fid,
+          fallbackUsername: context?.user?.username || ""
         }),
       });
 
-      // We're not actually creating a subname here, just testing the username fetch
-      // The API will return the fetched username in the response
       const result = await response.json();
       
-      if (response.ok && result.fetchedUsername) {
+      if (response.ok && result.success && result.fetchedUsername) {
         setFetchedUsername(result.fetchedUsername);
       } else {
         // Fallback to current username
@@ -606,10 +596,10 @@ export default function ClaimPage() {
   return (
     <>
       <Head>
-        <title>Assign Subnames - The Tap Day Leaderboard</title>
+        <title>Claim Subnames - The Tap Day Leaderboard</title>
         <meta
           name="description"
-          content="Assign custom deptofagri.eth subnames to eligible sender addresses from the Tap Day Leaderboard"
+          content="Claim custom deptofagri.eth subnames to eligible sender addresses from the Tap Day Leaderboard"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -632,7 +622,7 @@ export default function ClaimPage() {
               </h3>
               <div className="text-xs md:text-sm text-forest/70 space-y-1.5">
                 <p>• Connect wallet → Check eligibility</p>
-                <p>• Send USDC to the connected address from hat account</p>
+                <p>• Send USDC to the connected address (Farcaster address) from hat account</p>
                 <p>• Pick name → Get .deptofagri.eth</p>
                 <p>• One subname per Hat</p>
               </div>
@@ -850,7 +840,7 @@ export default function ClaimPage() {
                       </span>
                     </div>
                     <p className="text-xs md:text-sm text-green-700">
-                      <strong>{subnameCreated}</strong> created and linked.
+                      <strong>{subnameCreated}</strong> claimed and linked.
                     </p>
                   </div>
                 )}
@@ -1026,8 +1016,8 @@ export default function ClaimPage() {
                           {isValidatingEligibility
                             ? "Validating Eligibility..."
                             : isCreatingSubname
-                            ? "Assigning Subname..."
-                            : "Assign Subname"}
+                            ? "Claiming Subname..."
+                            : "Claim Subname"}
                         </button>
                         
                       </div>

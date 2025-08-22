@@ -88,6 +88,13 @@ export async function POST(request: NextRequest) {
         const normalizedAddress = body.address.toLowerCase().trim();
         const fullSubname = `${finalLabel}.deptofagri.eth`;
 
+        // Prevent creating subnames for the zero address
+        if (normalizedAddress === "0x0000000000000000000000000000000000000000") {
+            return NextResponse.json({
+                error: 'Cannot create subname for zero address'
+            }, { status: 400 });
+        }
+
         // Validate label format
         if (!/^[a-z0-9]{3,63}$/.test(finalLabel)) {
             return NextResponse.json({

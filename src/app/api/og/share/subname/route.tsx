@@ -3,7 +3,12 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+
+  const username = searchParams.get('username') || 'anon';
+  const pfp =
+    searchParams.get('pfp') || 'https://i.imgur.com/7ffGYrq.jpg';
 
   return new ImageResponse(
     (
@@ -49,7 +54,7 @@ export async function GET() {
         >
           {/* PFP */}
           <img
-            src={`${process.env.NEXT_PUBLIC_URL || ''}/images/deptofagri.svg`}
+            src={pfp}
             width={100}
             height={100}
             style={{
@@ -69,7 +74,7 @@ export async function GET() {
               textShadow: '2px 2px 6px rgba(0,0,0,0.6)',
             }}
           >
-            farcastername.deptofagri.eth
+            {username}.deptofagri.eth
           </span>
         </div>
     
@@ -88,7 +93,7 @@ export async function GET() {
             borderRadius: 15,
           }}
         >
-          🧢 Give your hat an identity
+          🌾 My hat has an identity
         </div>
       </div>
     ),

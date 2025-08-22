@@ -7,6 +7,7 @@ import { useMiniApp } from "@neynar/react";
 import leaderboardData from "~/constants/usdc_transfer_leaderboard.json";
 
 import Navigation from "~/components/ui/Navigation";
+import ShareButton from "~/components/ui/ShareButton";
 
 
 type LeaderboardEntry = {
@@ -839,9 +840,21 @@ export default function ClaimPage() {
                         Success!
                       </span>
                     </div>
-                    <p className="text-xs md:text-sm text-green-700">
+                    <p className="text-xs md:text-sm text-green-700 mb-4">
                       <strong>{subnameCreated}</strong> claimed and linked.
                     </p>
+                    
+                    {/* Share Button */}
+                    <div className="mt-4 pt-4 border-t border-green-200">
+                      <p className="text-xs text-green-600 mb-3">
+                        Share your new subname with the community!
+                      </p>
+                      <ShareButton
+                        subname={subnameCreated}
+                        pfpUrl={context?.user?.pfpUrl}
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -956,9 +969,21 @@ export default function ClaimPage() {
                                   </div>
                                 ))}
                               </div>
-                              <p className="text-xs text-green-600 mt-3">
+                              <p className="text-xs text-green-600 mt-3 mb-4">
                                 ✨ All set! Subname is linked and on leaderboard.
                               </p>
+                              
+                              {/* Share existing subname */}
+                              <div className="pt-3 border-t border-green-200">
+                                <p className="text-xs text-green-600 mb-3">
+                                  Share your existing subname:
+                                </p>
+                                <ShareButton
+                                  subname={existingSubnames[0]}
+                                  pfpUrl={context?.user?.pfpUrl}
+                                  className="w-full"
+                                />
+                              </div>
                             </div>
                           </div>
                         ) : (

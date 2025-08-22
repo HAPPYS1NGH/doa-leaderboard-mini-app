@@ -10,7 +10,11 @@ interface LookupEnsRequest {
 interface EnsLookupResult {
     address: string;
     ensName?: string;
+    avatar?: string;
+    url?: string;
 }
+
+
 
 export async function POST(request: NextRequest) {
 
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        console.log("Looking up ENS names for addresses:", body.addresses.length);
+        console.log("Looking up ENS names and avatars for addresses:", body.addresses.length);
 
         const results: EnsLookupResult[] = [];
 
@@ -35,16 +39,30 @@ export async function POST(request: NextRequest) {
                 size: 1000 // Get up to 1000 subnames at once
             });
 
-            // Create a map of address -> ENS name for quick lookup
+            // Create maps for address -> ENS name, avatar, and url for quick lookup
             const addressToEns = new Map<string, string>();
+            const addressToAvatar = new Map<string, string>();
+            const addressToUrl = new Map<string, string>();
             
             if (allSubnamesResponse?.items) {
+                console.log(`Processing ${allSubnamesResponse.items.length} subnames`);
                 allSubnamesResponse.items.forEach((subname) => {
-                    // Check if this subname has sender metadata
-                    const senderMetadata = subname.metadata?.sender;
-                    if (senderMetadata) {
-                        const normalizedSender = senderMetadata.toLowerCase().trim();
-                        addressToEns.set(normalizedSender, subname.fullName);
+                    // Use owner field directly instead of metadata
+                    if (subname.owner) {
+                        const normalizedOwner = subname.owner.toLowerCase().trim();
+                        addressToEns.set(normalizedOwner, subname.fullName);
+                        
+                        // Get avatar and url from texts (which is a Record<string, string>)
+                        if (subname.texts) {
+                            if (subname.texts.avatar) {
+                                addressToAvatar.set(normalizedOwner, subname.texts.avatar);
+                                console.log(`Found avatar for ${subname.fullName}: ${subname.texts.avatar}`);
+                            }
+                            if (subname.texts.url) {
+                                addressToUrl.set(normalizedOwner, subname.texts.url);
+                                console.log(`Found url for ${subname.fullName}: ${subname.texts.url}`);
+                            }
+                        }
                     }
                 });
             }
@@ -53,9 +71,13 @@ export async function POST(request: NextRequest) {
             for (const address of body.addresses) {
                 const normalizedAddress = address.toLowerCase().trim();
                 const ensName = addressToEns.get(normalizedAddress);
+                const avatar = addressToAvatar.get(normalizedAddress);
+                const url = addressToUrl.get(normalizedAddress);
                 results.push({
                     address: address, // Return original address format for consistency
-                    ensName: ensName
+                    ensName: ensName,
+                    avatar: avatar || undefined,
+                    url: url || undefined
                 });
             }
 
@@ -65,11 +87,15 @@ export async function POST(request: NextRequest) {
             for (const address of body.addresses) {
                 results.push({
                     address: address,
-                    ensName: undefined
+                    ensName: undefined,
+                    avatar: undefined,
+                    url: undefined
                 });
             }
         }
 
+        console.log(`Found ${results.filter(r => r.ensName).length} ENS names, ${results.filter(r => r.avatar).length} avatars, and ${results.filter(r => r.url).length} URLs`);
+        
         return NextResponse.json({
             success: true,
             data: results,

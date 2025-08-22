@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 
 import leaderboardData from "../constants/usdc_transfer_leaderboard.json";
 import { useEnsNames } from "../hooks/useEnsNames";
+import { useEnsAvatars } from "../hooks/useEnsAvatars";
 import { useLeaderboardData, SortBy } from "../hooks/useLeaderboardData";
 import { Header } from "./leaderboard/Header";
 import { SearchBox } from "./leaderboard/SearchBox";
@@ -20,6 +21,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   // Prepare address list once
   const allAddresses = useMemo(() => Object.keys(leaderboardData), []);
   const { ensNames, ensLoading, lastRefresh } = useEnsNames(allAddresses);
+  const { ensAvatars, ensUrls, ensAvatarLoading } = useEnsAvatars(allAddresses);
 
   const { entries, totalUsdcClaimed, totalTaps, totalFarmers, formatWallet, formatUsdc, calculateCapProgress } =
     useLeaderboardData(leaderboardData, sortBy, searchQuery, maxEntries, ensNames);
@@ -37,12 +39,20 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           formatUsdc={formatUsdc}
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
+          ensAvatars={ensAvatars}
+          ensUrls={ensUrls}
+          ensAvatarLoading={ensAvatarLoading}
+          ensNames={ensNames}
         />
         <MobileCards
           entries={entries}
           formatUsdc={formatUsdc}
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
+          ensAvatars={ensAvatars}
+          ensUrls={ensUrls}
+          ensAvatarLoading={ensAvatarLoading}
+          ensNames={ensNames}
         />
         {/* Leaderboard Stats */}
         <div className="mt-8 mb-6">

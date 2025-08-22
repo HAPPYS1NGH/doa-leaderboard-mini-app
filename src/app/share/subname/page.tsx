@@ -11,10 +11,11 @@ function getOgImageUrl(subname: string, pfp: string) {
 export async function generateMetadata({ 
   searchParams 
 }: { 
-  searchParams: { subname?: string, pfp?: string } 
+  searchParams: Promise<{ subname?: string, pfp?: string }> 
 }): Promise<Metadata> {
-  const subname = searchParams?.subname || 'username';
-  const pfp = searchParams?.pfp || 'https://i.imgur.com/7ffGYrq.jpg';
+  const params = await searchParams;
+  const subname = params?.subname || 'username';
+  const pfp = params?.pfp || 'https://i.imgur.com/7ffGYrq.jpg';
   
   const imageUrl = getOgImageUrl(subname, pfp);
 

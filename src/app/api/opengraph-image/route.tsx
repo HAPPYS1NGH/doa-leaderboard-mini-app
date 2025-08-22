@@ -55,7 +55,7 @@ export async function GET() {
             style={{
               borderRadius: '50%',
               objectFit: 'cover',
-              border: '6px solid #F5DEB3', // wheat color border
+              backgroundColor: '#FFFFFF',
             }}
           />
 
@@ -69,7 +69,7 @@ export async function GET() {
               textShadow: '2px 2px 6px rgba(0,0,0,0.6)',
             }}
           >
-            farcastername.deptofagri.eth
+            {`\{name\}`} .deptofagri.eth
           </span>
         </div>
     
@@ -88,7 +88,7 @@ export async function GET() {
             borderRadius: 15,
           }}
         >
-          🧢 Give your hat an identity
+        {`🧢  Claim your Hat's Identity`}
         </div>
       </div>
     ),

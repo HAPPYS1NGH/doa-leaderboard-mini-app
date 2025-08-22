@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const username = searchParams.get('username') || 'anon';
+  const subname = searchParams.get('subname') || 'anon';
   const pfp =
     searchParams.get('pfp') || 'https://i.imgur.com/7ffGYrq.jpg';
 
@@ -74,7 +74,7 @@ export async function GET(req: Request) {
               textShadow: '2px 2px 6px rgba(0,0,0,0.6)',
             }}
           >
-            {username}.deptofagri.eth
+            {subname}.deptofagri.eth
           </span>
         </div>
     

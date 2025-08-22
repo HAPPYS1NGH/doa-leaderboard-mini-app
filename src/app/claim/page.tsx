@@ -336,10 +336,12 @@ export default function ClaimPage() {
             );
             
             if (addressResult?.ensName) {
-              // Address already has a subname
-              setError(`Address ${manualAddress.slice(0, 6)}...${manualAddress.slice(-4)} already has a subname: ${addressResult.ensName}. No further action needed!`);
-              setEligibleAddresses([]);
-              setShowSubnameForm(false);
+              // Address already has a subname - show it instead of error
+              setExistingSubnames([addressResult.ensName]);
+              setEligibleAddresses([manualAddress.toLowerCase()]);
+              setSelectedAddress(manualAddress.toLowerCase());
+              setShowSubnameForm(true);
+              setError("");
               return;
             }
           }
@@ -466,9 +468,7 @@ export default function ClaimPage() {
     }
 
     if (existingSubnames.length > 0) {
-      setError(
-        `This address already has a subname: ${existingSubnames[0]}. Only one subname per address is allowed.`
-      );
+      // Don't show error, just return since the existing subname will be displayed in the UI
       return;
     }
 
@@ -612,7 +612,7 @@ export default function ClaimPage() {
             <h1 className="text-3xl md:text-4xl font-futura-bold text-forest mb-3">
               🏆 Claim Your Subname
             </h1>
-            <p className="text-base md:text-lg text-forest/70 max-w-2xl mx-auto mb-6">
+            <p className="text-base md:text-lg text-forest max-w-2xl mx-auto mb-6">
               Get your custom deptofagri.eth name from the Tap Day Leaderboard
             </p>
 
@@ -621,7 +621,7 @@ export default function ClaimPage() {
               <h3 className="text-base md:text-lg font-futura-bold text-forest mb-3">
                 Quick Guide
               </h3>
-              <div className="text-xs md:text-sm text-forest/70 space-y-1.5">
+              <div className="text-xs md:text-sm text-forest space-y-1.5">
                 <p>• Connect wallet → Check eligibility</p>
                 <p>• Send USDC to the connected address (Farcaster address) from hat account</p>
                 <p>• Pick name → Get .deptofagri.eth</p>
@@ -640,7 +640,7 @@ export default function ClaimPage() {
                   <h2 className="text-xl md:text-2xl font-futura-bold text-forest mb-2">
                     Connect Wallet
                   </h2>
-                  <p className="text-sm md:text-base text-forest/60">
+                  <p className="text-sm md:text-base text-forest">
                     Sign in to claim your subname
                   </p>
                 </div>
@@ -657,9 +657,9 @@ export default function ClaimPage() {
 
                 {/* Alternative: Manual Address Check */}
                 <div className="mt-6 pt-6 border-t border-forest/10">
-                  <p className="text-xs md:text-sm text-forest/60 mb-3">
+                  <p className="text-xs md:text-sm text-forest mb-3">
                     Check different address?<br/>
-                    <span className="text-xs text-forest/50">
+                    <span className="text-xs text-forest">
                       (Connect wallet first)
                     </span>
                   </p>
@@ -679,7 +679,7 @@ export default function ClaimPage() {
                       Connect Wallet First
                     </button>
                   </div>
-                  <p className="text-xs text-forest/50 mt-2">
+                  <p className="text-xs text-forest mt-2">
                     Connect wallet to verify authority
                   </p>
                 </div>
@@ -694,10 +694,10 @@ export default function ClaimPage() {
                     Connected
                   </h2>
 
-                  <p className="text-xs md:text-sm text-forest/60 font-mono bg-forest/5 p-2 rounded-lg">
+                  <p className="text-xs md:text-sm text-forest font-mono bg-forest/5 p-2 rounded-lg">
                     {user?.wallet?.address?.slice(0, 6)}...{user?.wallet?.address?.slice(-4)}
                   </p>
-                  <p className="text-xs text-forest/40 mt-1">
+                  <p className="text-xs text-forest mt-1">
                     {user?.wallet?.chainType || "Unknown"}
                   </p>
 
@@ -988,7 +988,7 @@ export default function ClaimPage() {
                           </div>
                         ) : (
                           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                            <p className="text-xs md:text-sm text-gray-600">
+                            <p className="text-xs md:text-sm text-foreground">
                               No existing subnames found.
                             </p>
                           </div>

@@ -1,17 +1,17 @@
 import React from "react";
 import { LeaderboardEntry } from "../../hooks/useLeaderboardData";
+import { sdk } from "@farcaster/frame-sdk";
 
 // Utility function to handle wallet clicks
-const handleWalletClick = (wallet: string, ensUrls: Map<string, string>) => {
-  const normalizedWallet = wallet.toLowerCase().trim();
-  const url = ensUrls.get(normalizedWallet);
-  
-  if (url) {
-    // Use the URL from ENS text records if available
-    window.open(url, '_blank');
+const handleWalletClick = (entry: LeaderboardEntry) => {
+  if (entry.fid) {
+    // Use Farcaster SDK to view profile if FID is available
+    sdk.actions.viewProfile({ 
+      fid: parseInt(entry.fid)
+    });
   } else {
     // Fallback to Etherscan
-    window.open(`https://etherscan.io/address/${wallet}`, '_blank');
+    window.open(`https://etherscan.io/address/${entry.wallet}`, '_blank');
   }
 };
 
@@ -21,12 +21,11 @@ type MobileCardsProps = {
   calculateCapProgress: (amount: string) => number;
   formatWallet: (wallet: string) => string;
   ensAvatars: Map<string, string>;
-  ensUrls: Map<string, string>;
   ensAvatarLoading: boolean;
   ensNames: Map<string, string>;
 };
 
-export const MobileCards: React.FC<MobileCardsProps> = ({ entries, formatUsdc, calculateCapProgress, formatWallet, ensAvatars, ensUrls, ensAvatarLoading, ensNames }) => {
+export const MobileCards: React.FC<MobileCardsProps> = ({ entries, formatUsdc, calculateCapProgress, formatWallet, ensAvatars, ensAvatarLoading, ensNames }) => {
   return (
     <div className="md:hidden bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
       {/* Mobile Leaderboard Header */}
@@ -37,8 +36,8 @@ export const MobileCards: React.FC<MobileCardsProps> = ({ entries, formatUsdc, c
         <div 
           key={entry.wallet} 
           className="p-4 border-b border-forest/10 hover:bg-white/50 transition-colors duration-150 last:border-b-0 cursor-pointer"
-          onClick={() => handleWalletClick(entry.wallet, ensUrls)}
-          title={ensUrls.get(entry.wallet.toLowerCase()) ? "Click to visit profile" : "Click to view on Etherscan"}
+          onClick={() => handleWalletClick(entry)}
+          title={entry.fid ? "Click to visit Farcaster profile" : "Click to view on Etherscan"}
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
@@ -69,7 +68,7 @@ export const MobileCards: React.FC<MobileCardsProps> = ({ entries, formatUsdc, c
           <div className="flex justify-between items-center mb-2">
             <div 
               className="font-mono text-sm text-forest font-futura-bold hover:text-forest/70 transition-colors flex items-center gap-1"
-              title={ensUrls.get(entry.wallet.toLowerCase()) ? "Click to visit profile" : "Click to view on Etherscan"}
+              title={entry.fid ? "Click to visit Farcaster profile" : "Click to view on Etherscan"}
             >
               {ensNames.get(entry.wallet.toLowerCase()) || formatWallet(entry.wallet)}
               <svg className="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">

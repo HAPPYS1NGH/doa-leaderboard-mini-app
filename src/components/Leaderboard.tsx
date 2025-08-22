@@ -21,10 +21,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
   // Prepare address list once
   const allAddresses = useMemo(() => Object.keys(leaderboardData), []);
   const { ensNames, ensLoading, lastRefresh } = useEnsNames(allAddresses);
-  const { ensAvatars, ensUrls, ensAvatarLoading } = useEnsAvatars(allAddresses);
+  const { ensAvatars, ensFids, ensAvatarLoading } = useEnsAvatars(allAddresses);
 
   const { entries, totalUsdcClaimed, totalTaps, totalFarmers, formatWallet, formatUsdc, calculateCapProgress } =
-    useLeaderboardData(leaderboardData, sortBy, searchQuery, maxEntries, ensNames);
+    useLeaderboardData(leaderboardData, sortBy, searchQuery, maxEntries, ensNames, ensFids);
 
   return (
     <div className="min-h-screen bg-cream py-8 px-4">
@@ -40,7 +40,6 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
           ensAvatars={ensAvatars}
-          ensUrls={ensUrls}
           ensAvatarLoading={ensAvatarLoading}
           ensNames={ensNames}
         />
@@ -50,7 +49,6 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ maxEntries = 50 }) => {
           calculateCapProgress={calculateCapProgress}
           formatWallet={formatWallet}
           ensAvatars={ensAvatars}
-          ensUrls={ensUrls}
           ensAvatarLoading={ensAvatarLoading}
           ensNames={ensNames}
         />

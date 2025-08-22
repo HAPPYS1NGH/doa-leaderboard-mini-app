@@ -4,6 +4,7 @@ export type EnsAvatarResult = {
   address: string;
   avatar?: string;
   url?: string;
+  fid?: string;
 };
 
 export type UseEnsAvatarsOptions = {
@@ -31,6 +32,7 @@ export function useEnsAvatars(addresses: string[], options?: UseEnsAvatarsOption
 
   const [ensAvatars, setEnsAvatars] = useState<Map<string, string>>(new Map());
   const [ensUrls, setEnsUrls] = useState<Map<string, string>>(new Map());
+  const [ensFids, setEnsFids] = useState<Map<string, string>>(new Map());
   const [ensAvatarLoading, setEnsAvatarLoading] = useState<boolean>(false);
   const [lastAvatarRefresh, setLastAvatarRefresh] = useState<number>(0);
 
@@ -63,12 +65,16 @@ export function useEnsAvatars(addresses: string[], options?: UseEnsAvatarsOption
         const result: { data: EnsAvatarResult[] } = await response.json();
         const nextAvatarMap = new Map<string, string>();
         const nextUrlMap = new Map<string, string>();
+        const nextFidMap = new Map<string, string>();
         for (const item of result.data) {
           if (item.avatar) {
             nextAvatarMap.set(item.address.toLowerCase().trim(), item.avatar);
           }
           if (item.url) {
             nextUrlMap.set(item.address.toLowerCase().trim(), item.url);
+          }
+          if (item.fid) {
+            nextFidMap.set(item.address.toLowerCase().trim(), item.fid);
           }
         }
 
@@ -83,12 +89,20 @@ export function useEnsAvatars(addresses: string[], options?: UseEnsAvatarsOption
           Array.from(nextUrlMap.entries()).some(
             ([k, v]) => ensUrls.get(k) !== v
           );
+        const fidChanged =
+          nextFidMap.size !== ensFids.size ||
+          Array.from(nextFidMap.entries()).some(
+            ([k, v]) => ensFids.get(k) !== v
+          );
         
         if (avatarChanged) {
           setEnsAvatars(nextAvatarMap);
         }
         if (urlChanged) {
           setEnsUrls(nextUrlMap);
+        }
+        if (fidChanged) {
+          setEnsFids(nextFidMap);
         }
         setLastAvatarRefresh(Date.now());
       } catch (error) {
@@ -151,6 +165,7 @@ export function useEnsAvatars(addresses: string[], options?: UseEnsAvatarsOption
   return {
     ensAvatars,
     ensUrls,
+    ensFids,
     ensAvatarLoading,
     lastAvatarRefresh,
     refresh,

@@ -14,6 +14,7 @@ export type LeaderboardEntry = {
   transactionCount: number;
   destinationAddresses?: string[];
   originalRank: number;
+  fid?: string;
 };
 
 export type SortBy = "amount" | "transactions";
@@ -23,20 +24,26 @@ export function useLeaderboardData(
   sortBy: SortBy,
   searchQuery: string,
   maxEntries: number,
-  ensNames: Map<string, string>
+  ensNames: Map<string, string>,
+  ensFids: Map<string, string>
 ) {
   const allEntries = useMemo<LeaderboardEntry[]>(() => {
     return Object.entries(data)
-      .map(([wallet, record]) => ({
-        wallet,
-        totalUsdcSent: record.totalUsdcSent,
-        transactionCount: record.transactionCount,
-        destinationAddresses: record.destinationAddresses ?? [],
-        originalRank: 0,
-      }))
+      .map(([wallet, record]) => {
+        const normalizedWallet = wallet.toLowerCase().trim();
+        const fid = ensFids.get(normalizedWallet);
+        return {
+          wallet,
+          totalUsdcSent: record.totalUsdcSent,
+          transactionCount: record.transactionCount,
+          destinationAddresses: record.destinationAddresses ?? [],
+          originalRank: 0,
+          fid,
+        };
+      })
       .sort((a, b) => parseFloat(b.totalUsdcSent) - parseFloat(a.totalUsdcSent))
       .map((entry, index) => ({ ...entry, originalRank: index + 1 }));
-  }, [data]);
+  }, [data, ensFids]);
 
   const filteredAndSorted = useMemo<LeaderboardEntry[]>(() => {
     const term = searchQuery.toLowerCase().trim();

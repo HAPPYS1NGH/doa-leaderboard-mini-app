@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
 // Configuration
-const API_URL = "https://api.basescan.org/api";
+const API_URL = "https://api.etherscan.io/v2/api?chainid=8453";
 const API_KEY = process.env.BASESCAN_API_KEY;
 const USDC_CONTRACT = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC contract on Base
 
@@ -43,7 +43,6 @@ async function traceUsdcDestinations(address: string): Promise<string[]> {
 
       const destinationArray = Array.from(destinations);
       console.log(`Found ${destinationArray.length} unique destinations`);
-      
       return destinationArray;
     } else {
       console.log(`Failed to fetch transfers: ${data.message || "Unknown error"}`);
